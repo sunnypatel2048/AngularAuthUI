@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Router, RouterLink } from '@angular/router';
 import ValidateForm from '../../helpers/validateform';
 import { AuthService } from '../../services/auth.service';
-
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -19,7 +19,7 @@ export class LoginComponent {
   eyeIcon: string = "fa-eye-slash";
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -39,19 +39,18 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value)
       .subscribe({
         next: (res) => {
-          alert(res.message)
+          this.toastr.success(res.message)
           this.router.navigate(['dashboard'])
         },
         error: (err) => {
-          alert(err?.error.message)
+          this.toastr.error(err?.error.message)
         }
       })
-      console.log(this.loginForm.value)
     }
     else {
       // throw error
       ValidateForm.validateAllFormFields(this.loginForm);
-      alert("Form is invalid");
+      this.toastr.error("Form is invalid");
     }
   }
 }
