@@ -42,18 +42,18 @@ export class SignupComponent {
       this.authService.signUp(this.signUpForm.value)
       .subscribe({
         next: (res) => {
-          this.toastr.success(res.message)
+          this.toastr.success(res.message, "SUCCESS")
           this.signUpForm.reset();
           this.router.navigate(['login'])
         },
         error: (err) => {
-          this.toastr.error(err?.error.message)
+          this.toastr.error(err?.error.message, "ERROR")
         }
       })
     }
     else {
       ValidateForm.validateAllFormFields(this.signUpForm);
-      this.toastr.error("Form is invalid");
+      this.toastr.error("Form is invalid", "ERROR");
     }
   }
 }

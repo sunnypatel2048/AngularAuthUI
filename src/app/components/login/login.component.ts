@@ -39,18 +39,18 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value)
       .subscribe({
         next: (res) => {
-          this.toastr.success(res.message)
+          this.authService.storeToken(res.token)
+          this.toastr.success(res.message, "SUCCESS")
           this.router.navigate(['dashboard'])
         },
         error: (err) => {
-          this.toastr.error(err?.error.message)
+          this.toastr.error(err?.error.message, "ERROR")
         }
       })
     }
     else {
-      // throw error
       ValidateForm.validateAllFormFields(this.loginForm);
-      this.toastr.error("Form is invalid");
+      this.toastr.error("Form is invalid", "ERROR");
     }
   }
 }
