@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,16 @@ import { AuthService } from '../../services/auth.service';
 })
 export class DashboardComponent {
 
-  constructor(private authService: AuthService, private router: Router, private toastr: ToastrService) {}
+  public users: any = []
+
+  constructor(private authService: AuthService, private router: Router, private toastr: ToastrService, private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    this.apiService.getUsers()
+    .subscribe(res => {
+      this.users = res;
+    })
+  }
 
   logOut() {
     if(this.authService.signOut()) {
