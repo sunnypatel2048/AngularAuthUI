@@ -4,34 +4,44 @@ import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  public users: any = [];
+  public fullName: string = '';
 
-  public users: any = []
-
-  constructor(private authService: AuthService, private router: Router, private toastr: ToastrService, private apiService: ApiService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService,
+    private apiService: ApiService,
+    private userStore: UserStoreService
+  ) {}
 
   ngOnInit(): void {
-    this.apiService.getUsers()
-    .subscribe(res => {
+    this.apiService.getUsers().subscribe((res) => {
       this.users = res;
-    })
+    });
+
+    this.userStore.getfullNameFromStore().subscribe((val) => {
+      let fullNameFromToken = this.authService.getFullNameFromToken();
+      this.fullName = val || fullNameFromToken;
+    });
   }
 
   logOut() {
-    if(this.authService.signOut()) {
-      this.toastr.success("Successfully Logged Out!", "SUCCESS")
-      this.router.navigate(['login'])
-    }
-    else {
-      this.toastr.error("Error Logging Out!", "ERROR")
+    if (this.authService.signOut()) {
+      this.toastr.success('Successfully Logged Out!', 'SUCCESS');
+      this.router.navigate(['login']);
+    } else {
+      this.toastr.error('Error Logging Out!', 'ERROR');
     }
   }
 }
