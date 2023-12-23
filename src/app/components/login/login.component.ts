@@ -53,6 +53,7 @@ export class LoginComponent {
           this.authService.storeToken(res.token);
           const tokenPayload = this.authService.decodedToken()
           this.userStore.setfullNameForStore(tokenPayload.name)
+          this.userStore.setRoleForStore(tokenPayload.role)
           this.toastr.success(res.message, 'SUCCESS');
           this.router.navigate(['dashboard']);
         },

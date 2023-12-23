@@ -16,6 +16,7 @@ import { UserStoreService } from '../../services/user-store.service';
 export class DashboardComponent {
   public users: any = [];
   public fullName: string = '';
+  public role!: string;
 
   constructor(
     private authService: AuthService,
@@ -34,9 +35,15 @@ export class DashboardComponent {
       let fullNameFromToken = this.authService.getFullNameFromToken();
       this.fullName = val || fullNameFromToken;
     });
+
+    this.userStore.getRoleFromStore()
+    .subscribe(val=>{
+      const roleFromToken = this.authService.getRoleFromToken();
+      this.role = val || roleFromToken;
+    });
   }
 
-  logOut() {
+  logout() {
     if (this.authService.signOut()) {
       this.toastr.success('Successfully Logged Out!', 'SUCCESS');
       this.router.navigate(['login']);
