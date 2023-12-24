@@ -50,11 +50,12 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          this.authService.storeToken(res.token);
+          this.authService.storeToken(res.accessToken);
+          this.authService.storeRefreshToken(res.refreshToken)
           const tokenPayload = this.authService.decodedToken()
           this.userStore.setfullNameForStore(tokenPayload.name)
           this.userStore.setRoleForStore(tokenPayload.role)
-          this.toastr.success(res.message, 'SUCCESS');
+          this.toastr.success('Login Successful!', 'SUCCESS');
           this.router.navigate(['dashboard']);
         },
         error: (err) => {
